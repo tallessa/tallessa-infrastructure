@@ -27,19 +27,19 @@
     - nginx
   notify: restart nginx
 
-- name: make an archive file of the dist directory for tallessa-site
-  become: no
-  local_action: shell cd ../tallessa-site/dist && tar -cvf ../../tallessa-site.tar .
-  tags:
-    - deploy
-    - deploy-tallessa-site
+# - name: make an archive file of the dist directory for tallessa-site
+#   become: no
+#   local_action: shell cd ../tallessa-site/dist && tar -cvf ../../tallessa-site.tar .
+#   tags:
+#     - deploy
+#     - deploy-tallessa-site
 
-- name: deploy tallessa-site files
-  unarchive: >
-    src=../../../../tallessa-site.tar
-    dest=/srv/tallessa/site/
-    owner=tallessadmin
-    group=tallessa
-  tags:
-    - deploy
-    - deploy-tallessa-site
+# - name: deploy tallessa-site files
+#   unarchive: >
+#     src=../../../../tallessa-site.tar
+#     dest=/srv/tallessa/site/
+#     owner=tallessadmin
+#     group=tallessa
+#   tags:
+#     - deploy
+#     - deploy-tallessa-site

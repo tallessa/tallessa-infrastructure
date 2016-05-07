@@ -12,6 +12,13 @@ Mostly Scaleway/ARM related.
 * Scaleway servers come with IPv6 disabled. Nginx default configuration has IPv6 enabled. Installation of Nginx packages fails due to this. Solution: Remove IPv6 `listen` from `/etc/nginx/sites-available/default`, run `apt-get install nginx` again.
 * There is a chicken-egg problem with certificates and virtual hosts. Due to this, create first with `tallessa_frontend_ssl=0 tallessa_site_ssl=0` and after letsencrypt has finished, leave them to defaults.
 
+## TODO
+
+### `letsencrypt`
+
+- [ ] Find out why some files get created under `root`
+- [ ] Crontab entries for `renew.sh`
+
 ## License
 
 NOTE: The MIT license only applies to the Ansible scripts. The application itself is GNU AGPLv3 licensed.
