@@ -17,7 +17,7 @@ Mostly Scaleway/ARM related.
 NOTE: The MIT license only applies to the Ansible scripts. The application itself is GNU AGPLv3 licensed.
 
     Tallessa – Effortless Asset Management (Infrastructure scripts)
-    Copyright © 2016 Santtu Pajukanta️
+    Copyright © 2016 Santtu Pajukanta
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
