@@ -1,0 +1,8 @@
+---
+- include: locale.yml
+- include: users.yml
+- include: packages.yml
+- include: sudo.yml
+- include: sshd.yml
+- include: ntp.yml
+- include: timezone.yml

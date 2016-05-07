@@ -1,0 +1,10 @@
+---
+- hosts: tallessa-servers
+  gather_facts: no
+  roles:
+    - { role: base, tags: [base] }
+    - { role: postgresql, tags: [postgresql] }
+    - { role: nginx, tags: [nginx] }
+    - { role: tallessa-backend, tags: [tallessa-backend] }
+    - { role: tallessa-frontend, tags: [tallessa-frontend] }
+    - { role: letsencrypt, tags: [letsencrypt] }

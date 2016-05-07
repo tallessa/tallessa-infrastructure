@@ -1,0 +1,4 @@
+---
+- name: set /etc/timezone
+  copy: src=timezone dest=/etc/timezone
+  notify: update tzdata

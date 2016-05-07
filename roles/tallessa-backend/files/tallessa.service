@@ -1,0 +1,17 @@
+[Unit]
+Description=Tallessa - Effortless Asset Management
+Requires=tallessa.socket
+After=network.target
+
+[Service]
+PIDFile=/run/tallessa/pid
+User=tallessa
+Group=tallessa
+WorkingDirectory=/srv/tallessa/backend/app
+ExecStart=/srv/tallessa/backend/virtualenv/bin/gunicorn --pid /run/tallessa/pid tallessa_backend.wsgi:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+- name: create tallessa site directory
+  file: >
+    path=/srv/tallessa/site
+    state=directory
+    owner=tallessadmin
+    group=tallessa
+    mode=02750
+
+- name: make sure nginx has read access to tallessa site directory
+  user: >
+    name=nginx
+    groups=tallessa
+    append=yes
+
+- name: install tallessa site config
+  template: src=tallessa.eu.nginx.conf.j2 dest=/etc/nginx/sites-available/tallessa.eu
+  notify: restart nginx
+  tags:
+    - nginx
+
+- name: enable tallessa site
+  file: >
+    src=/etc/nginx/sites-available/tallessa.eu
+    path=/etc/nginx/sites-enabled/tallessa.eu
+    state=link
+  tags:
+    - nginx
+  notify: restart nginx
+
+- name: make an archive file of the dist directory for tallessa-site
+  become: no
+  local_action: shell cd ../tallessa-site/dist && tar -cvf ../../tallessa-site.tar .
+  tags:
+    - deploy
+    - deploy-tallessa-site
+
+- name: deploy tallessa-site files
+  unarchive: >
+    src=../../../../tallessa-site.tar
+    dest=/srv/tallessa/site/
+    owner=tallessadmin
+    group=tallessa
+  tags:
+    - deploy
+    - deploy-tallessa-site

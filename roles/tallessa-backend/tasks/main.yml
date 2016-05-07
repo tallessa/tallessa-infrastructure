@@ -1,0 +1,43 @@
+- name: create tallessa service directory
+  file: path={{ item }} state=directory owner=tallessadmin group=tallessa mode=02750
+  with_items:
+    - /srv/tallessa
+    - /srv/tallessa/backend
+
+- name: check out tallessa code from github
+  become: yes
+  become_user: tallessadmin
+  git: >
+    repo=https://github.com/tallessa/tallessa-backend.git
+    dest=/srv/tallessa/backend/app
+    version=master
+  notify: restart tallessa
+  tags:
+    - deploy
+    - deploy-tallessa-backend
+
+- name: create tallessa virtualenv
+  become: yes
+  become_user: tallessadmin
+  command: /usr/bin/env python3 -m venv /srv/tallessa/backend/virtualenv
+  args:
+    creates: /srv/tallessa/backend/virtualenv
+
+- name: install tallessa dependencies
+  pip: >
+    requirements=/srv/tallessa/backend/app/requirements.txt
+    virtualenv=/srv/tallessa/backend/virtualenv
+  tags:
+    - deploy
+    - deploy-tallessa-backend
+
+- name: install tmpfiles.d configuration for tallessa
+  copy: src=tallessa.tmpfiles.conf dest=/etc/tmpfiles.d/tallessa.conf
+
+- name: install tallessa systemd files
+  copy: src={{ item }} dest=/etc/systemd/system/{{ item }}
+  with_items:
+    - tallessa.service
+    - tallessa.socket
+  notify: restart tallessa
+

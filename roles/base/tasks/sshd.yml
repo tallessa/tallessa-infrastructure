@@ -1,0 +1,7 @@
+---
+- name: configure sshd
+  copy: >
+    src=sshd_config
+    dest=/etc/ssh/sshd_config
+    validate='/usr/sbin/sshd -T -f %s'
+  notify: restart sshd

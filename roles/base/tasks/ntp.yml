@@ -1,0 +1,7 @@
+---
+- name: Install ntp
+  apt: pkg=ntp state=present
+
+- name: Copy ntp.conf
+  copy: src=ntp.conf dest=/etc/ntp.conf
+  notify: restart ntpd

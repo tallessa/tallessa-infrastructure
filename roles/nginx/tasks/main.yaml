@@ -1,0 +1,72 @@
+---
+- name: Install python dependencies for managing apt repositories
+  apt: pkg=python-pycurl
+  tags: [nginx, repo]
+
+# - name: Add nginx repository
+#   apt_repository: repo='deb http://nginx.org/packages/ubuntu/ xenial nginx' state=present update_cache=yes
+#   tags: [nginx, repo]
+
+# - name: Add nginx repository signing key
+#   apt_key: url=http://nginx.org/keys/nginx_signing.key id=7BD9BF62 state=present
+#   tags: [nginx, repo]
+
+- name: Install nginx
+  apt: pkg=nginx state=latest update_cache=yes
+  tags: [nginx, install]
+
+- name: Ensure nginx config directories exist
+  file: path={{ item }} state=directory
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/sites-available
+    - /etc/nginx/sites-enabled
+
+- name: Remove default nginx configs
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/nginx/sites-available/default
+    - /etc/nginx/sites-enabled/default
+    - /etc/nginx/conf.d
+  notify: restart nginx
+  tags: [nginx, config]
+
+# - name: Deploy SHA-256 hashed SSL certificates
+#   copy: src=../../../files/etc/ssl/certs/{{ item }} dest=/etc/ssl/certs/{{ item }}
+#   with_items:
+#     - _wildcard_.domain.com+intermediate.sha256.crt
+#     - _wildcard_.qa.domain.com+intermediate.sha256.crt
+#   notify: restart nginx
+#   tags: [nginx, ssl]
+
+# - name: Deploy SSL OCSP stapling CA bundle for Geotrust RapidSSL
+#   copy: src=../../../files/etc/ssl/private/geotrust-stapling.pem dest=/etc/ssl/private/geotrust-stapling.pem
+#   notify: restart nginx
+#   tags: [nginx, ssl]
+
+# - name: Deploy SSL private keys (NOTE you must have obtained them from elsewhere - ask Santtu)
+#   copy: src={{ item }} dest=/etc/ssl/private
+#   with_fileglob: ['../../../files/etc/ssl/private/*.key']
+#   notify: restart nginx
+#   tags: [nginx, ssl]
+
+- name: Deploy dhparams
+  copy: src=dhparam.pem dest=/etc/nginx/dhparam.pem
+  notify: restart nginx
+  tags: [nginx, ssl]
+
+- name: Allow tcp/80 and tcp/443 for HTTP
+  ufw: rule=allow insert={{ item.num }} proto=tcp port={{ item.port }}
+  with_items:
+    - { num: 1, port: 80  }
+    - { num: 2, port: 443 }
+  tags: [nginx, ufw]
+
+- name: Install default nginx conf
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: restart nginx
+  tags: [nginx, ssl]
+
+# - name: Ensure nginx is running
+#   service: name=nginx state=started
+#   tags: [nginx]

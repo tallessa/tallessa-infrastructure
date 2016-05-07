@@ -1,0 +1,2 @@
+- name: restart tallessa
+  service: name=tallessa state=restarted enabled=yes

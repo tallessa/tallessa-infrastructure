@@ -1,0 +1,3 @@
+letsencrypt_domains:
+  - name: tallessa.eu
+    subject_alt_name: "DNS:tallessa.eu,DNS:admin.tallessa.eu,DNS:desucon.tallessa.eu,DNS:leonidas.tallessa.eu,DNS:tracon.tallessa.eu,DNS:www.tallessa.eu"

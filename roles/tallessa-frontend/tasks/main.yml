@@ -1,0 +1,45 @@
+- name: create tallessa frontend directory
+  file: >
+    path=/srv/tallessa/frontend
+    state=directory
+    owner=tallessadmin
+    group=tallessa
+    mode=02750
+
+- name: make sure nginx has read access to tallessa frontend directory
+  user: >
+    name=nginx
+    groups=tallessa
+    append=yes
+
+- name: install tallessa frontend site config
+  template: src=app.tallessa.eu.nginx.conf.j2 dest=/etc/nginx/sites-available/app.tallessa.eu
+  notify: restart nginx
+  tags:
+    - nginx
+
+- name: enable tallessa frontend site
+  file: >
+    src=/etc/nginx/sites-available/app.tallessa.eu
+    path=/etc/nginx/sites-enabled/app.tallessa.eu
+    state=link
+  tags:
+    - nginx
+  notify: restart nginx
+
+- name: make an archive file of the dist directory for tallessa-frontend
+  become: no
+  local_action: shell cd ../tallessa-frontend/dist && tar -cvf ../../tallessa-frontend.tar .
+  tags:
+    - deploy
+    - deploy-tallessa-frontend
+
+- name: deploy tallessa-frontend files
+  unarchive: >
+    src=../../../../tallessa-frontend.tar
+    dest=/srv/tallessa/frontend/
+    owner=tallessadmin
+    group=tallessa
+  tags:
+    - deploy
+    - deploy-tallessa-frontend

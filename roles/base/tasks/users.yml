@@ -1,0 +1,29 @@
+---
+- name: create groups
+  group: name={{ item }} state=present
+  with_items:
+    - admin
+    - tallessa
+    - tallessadmin
+
+- name: create service user
+  user: >
+    name=tallessa
+    group=tallessa
+    shell=/bin/bash
+    password=$6$0CxUo0VG34$e0xcR7KybDDiljk9A0776UMBS9qcaU4UyqLDraE4dNTqccL0ujVfPPcUH1Vne7ez0KuGZ9NbZAnN2AHrJpCyK.
+
+- name: create admin user
+  user: >
+    name=tallessadmin
+    group=tallessadmin
+    groups=admin,tallessa
+    shell=/bin/bash
+    home=/srv/tallessa
+    password=$6$sfIlIg.aCkMy8$lGwVPG/7jMuhDrBgonEnQEi7WVKt2kbmVTgKuGQsbSvp.8pg.bsb5N836f4oY7xlYGTHDzcl41JSJUxNnGxdS.
+
+- name: ensure /home/tallessadmin/.ssh exists
+  file: path=/home/tallessadmin/.ssh state=directory owner=tallessadmin group=tallessadmin mode=0700
+
+- name: set authorized keys
+  copy: src=authorized_keys dest=/home/tallessadmin/.ssh/authorized_keys owner=tallessadmin group=tallessadmin mode=0600
