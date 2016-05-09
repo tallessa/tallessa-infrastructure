@@ -3,6 +3,8 @@ Description=Tallessa - Effortless Asset Management
 
 [Socket]
 ListenStream=/run/tallessa/socket
+SocketUser=tallessa
+SocketGroup=tallessa
 
 [Install]
 WantedBy=sockets.target
