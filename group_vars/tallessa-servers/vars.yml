@@ -1,0 +1,1 @@
+tallessa_backend_secret_key: "{{ vault_tallessa_backend_secret_key }}"

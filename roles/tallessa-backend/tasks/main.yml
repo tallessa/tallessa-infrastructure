@@ -31,6 +31,33 @@
     - deploy
     - deploy-tallessa-backend
 
+- name: create tallessa-backend .env file
+  template: src=env.j2 dest=/srv/tallessa/backend/app/.env owner=tallessadmin group=tallessa mode=0640
+  notify: restart tallessa
+  tags:
+    - deploy
+    - deploy-tallessa-backend
+
+- name: run python manage.py collectstatic for tallessa-backend
+  become: yes
+  become_user: tallessadmin
+  command: /srv/tallessa/backend/virtualenv/bin/python manage.py collectstatic --noinput
+  args:
+    chdir: /srv/tallessa/backend/app
+  tags:
+    - deploy
+    - deploy-tallessa-backend
+
+- name: run python manage.py setup for tallessa-backend
+  become: yes
+  become_user: tallessa
+  command: /srv/tallessa/backend/virtualenv/bin/python manage.py setup
+  args:
+    chdir: /srv/tallessa/backend/app
+  tags:
+    - deploy
+    - deploy-tallessa-backend
+
 - name: install tmpfiles.d configuration for tallessa
   copy: src=tallessa.tmpfiles.conf dest=/etc/tmpfiles.d/tallessa.conf
 
