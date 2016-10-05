@@ -1,4 +1,6 @@
 ---
 - name: set /etc/timezone
-  copy: src=timezone dest=/etc/timezone
+  copy:
+    content: "Europe/Helsinki"
+    dest: /etc/timezone
   notify: update tzdata

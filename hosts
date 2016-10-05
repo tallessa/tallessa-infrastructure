@@ -1,2 +1,2 @@
 [tallessa-servers]
-jemma.tallessa.eu ansible_ssh_host=163.172.138.104 ansible_user=root
+jemma.tallessa.eu ansible_ssh_host=163.172.138.104
