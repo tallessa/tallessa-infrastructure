@@ -7,11 +7,12 @@
     pkg={{ item }}
     state=present
   with_items:
-    - screen
-    - vim
+    - acl
+    - build-essential
     - git
     - htop
-    - wget
-    - python3-venv
     - python3-dev
-    - build-essential
+    - python3-venv
+    - screen
+    - vim
+    - wget
